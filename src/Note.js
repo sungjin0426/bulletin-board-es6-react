@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import Draggable from 'react-draggable'
 
-export class Note extends React.Component {
+export default class Note extends React.Component {
       constructor(props) {
       super(props);
 
@@ -32,13 +32,13 @@ export class Note extends React.Component {
         });
     }
     save() {
-        this.props.onChange(this.refs.newText.value, this.id).bind(this)
+        this.props.onChange(this.refs.newText.value, this.id)
         this.setState({
           editing: false
         });
     }
     remove() {
-        this.state.onRemove(this.props.id)
+        this.props.onRemove(this.props.id)
     }
     renderForm() {
         return (
@@ -72,5 +72,3 @@ export class Note extends React.Component {
 
     }
 }
-
-export default Note
