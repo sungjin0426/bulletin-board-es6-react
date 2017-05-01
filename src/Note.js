@@ -2,9 +2,11 @@ import React from 'react'
 import './App.css'
 import Draggable from 'react-draggable'
 
-export default class Note extends React.Component {
-    state = {
-        editing: false
+export class Note extends React.Component {
+      constructor(props) {
+      super(props);
+
+      this.state = { editing : false };
     }
     componentWillMount() {
         this.style = {
@@ -25,14 +27,18 @@ export default class Note extends React.Component {
         return (x + Math.ceil(Math.random() * (y-x))) + s
     }
     edit() {
-        this.setState({editing: true})
+        this.setState({
+          editing: true
+        });
     }
     save() {
-        this.props.onChange(this.refs.newText.value, this.id)
-        this.setState({editing: false})
+        this.props.onChange(this.refs.newText.value, this.id).bind(this)
+        this.setState({
+          editing: false
+        });
     }
     remove() {
-        this.props.onRemove(this.props.id)
+        this.state.onRemove(this.props.id)
     }
     renderForm() {
         return (
@@ -51,7 +57,7 @@ export default class Note extends React.Component {
                  style={this.style}>
                 <p>{this.props.children}</p>
                 <span>
-                  <button onClick={this.edit}>EDIT</button>
+                  <button onClick={this.edit.bind(this)}>EDIT</button>
                   <button onClick={this.remove}>X</button>
                 </span>
             </div>
@@ -66,3 +72,5 @@ export default class Note extends React.Component {
 
     }
 }
+
+export default Note
