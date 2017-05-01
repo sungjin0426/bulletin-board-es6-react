@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 import Draggable from 'react-draggable'
 
-export class Note extends React.Component {
+export default class Note extends React.Component {
     state = {
         editing: false
     }

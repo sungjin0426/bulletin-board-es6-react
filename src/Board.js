@@ -57,7 +57,7 @@ export default class Board extends React.Component {
         this.setState({notes})
     }
     remove(id) {
-        var notes = this.state.notes.filter(note => note.id !== id)
+        var notes = this.notes.filter(note => note.id !== id)
         this.setState({notes})
     }
     eachNote(note) {
