@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './App.css'
 import Draggable from 'react-draggable'
 
-export default class Note extends React.Component {
-      constructor(props) {
-      super(props);
-
+export default class Note extends Component {
+      constructor() {
+      super();
       this.state = { editing : false };
+      this.edit = this.edit.bind(this);
+      this.save = this.save.bind(this);
+      this.remove = this.remove.bind(this);
     }
     componentWillMount() {
         this.style = {
@@ -30,15 +32,18 @@ export default class Note extends React.Component {
         this.setState({
           editing: true
         });
+        console.log("editing note");
     }
     save() {
-        this.props.onChange(this.refs.newText.value, this.id)
+        this.props.onChange(this.refs.newText.value, this.props.id)
         this.setState({
           editing: false
         });
+        console.log('saving note');
     }
     remove() {
         this.props.onRemove(this.props.id)
+        console.log('deleting note');
     }
     renderForm() {
         return (
@@ -57,8 +62,8 @@ export default class Note extends React.Component {
                  style={this.style}>
                 <p>{this.props.children}</p>
                 <span>
-                  <button onClick={this.edit.bind(this)}>EDIT</button>
-                  <button onClick={this.remove}>X</button>
+                  <button onClick={this.edit}>EDIT</button>
+                  <button onClick={this.remove}>DELETE</button>
                 </span>
             </div>
             )
