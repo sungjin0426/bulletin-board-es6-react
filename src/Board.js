@@ -1,74 +1,84 @@
-import React from 'react'
+import React, { Component } from 'react'
 import './App.css'
-import Draggable from 'react-draggable'
+import Note from './Note'
 
-export default class Note extends React.Component {
-      constructor(props) {
-      super(props);
+export default class Board extends Component {
+    static propTypes = {
+        count: function(props, propName) {
+            if(typeof props[propName] !== "number") {
+                return new Error("the count must be a number")
+            }
 
-      this.state = { editing : false };
+            if(props[propName] > 100) {
+                return new Error('Creating ' + props[propName] + ' notes is ridiculous')
+            }
+        }
+    }
+    constructor() {
+        super();
+        this.state = { notes : [] };
+        this.nextId = this.nextId.bind(this);
+        this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
+        this.remove = this.remove.bind(this);
+        this.eachNote = this.eachNote.bind(this);
     }
     componentWillMount() {
-        this.style = {
-            right: this.randomBetween(0, window.innerWidth - 150, 'px'),
-            top: this.randomBetween(0, window.innerHeight -150, 'px')
+        if (this.props.count) {
+            var url = `http://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`
+            fetch(url)
+                  .then(results => results.json())
+                  .then(array => array[0])
+                  .then(text => text.split('. '))
+                  .then(array => array.forEach(
+                        sentence => this.add(sentence)))
+                  .catch(function(err) {
+                    console.log("Didn't connect to the API", err)
+                  })
         }
     }
-    componentDidUpdate() {
-        if (this.state.editing) {
-            this.refs.newText.focus()
-            this.refs.newText.select()
-        }
+    nextId() {
+        this.uniqueId = this.uniqueId || 0
+        return this.uniqueId++
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.children !== nextProps.children || this.state !== nextState
+    add(text) {
+        var notes = [
+            ...this.state.notes,
+            {
+                id: this.nextId(),
+                note: text
+            }
+        ]
+        this.setState({notes})
+        console.log("adding note");
     }
-    randomBetween(x, y, s) {
-        return (x + Math.ceil(Math.random() * (y-x))) + s
-    }
-    edit() {
-        this.setState({
-          editing: true
-        });
-    }
-    save() {
-        this.props.onChange(this.refs.newText.value, this.id)
-        this.setState({
-          editing: false
-        });
-    }
-    remove() {
-        this.props.onRemove(this.props.id)
-    }
-    renderForm() {
-        return (
-            <div className="note"
-                 style={this.style}>
-              <textarea ref="newText"
-                        defaultValue={this.props.children}>
-              </textarea>
-              <button onClick={this.save}>SAVE</button>
-            </div>
-        )
-    }
-    renderDisplay() {
-        return (
-            <div className="note"
-                 style={this.style}>
-                <p>{this.props.children}</p>
-                <span>
-                  <button onClick={this.edit.bind(this)}>EDIT</button>
-                  <button onClick={this.remove}>X</button>
-                </span>
-            </div>
+    update(newText, id) {
+        var notes = this.state.notes.map(
+            note => (note.id !== id) ?
+               note :
+                {
+                    ...note,
+                    note: newText
+                }
             )
+        this.setState({notes})
+    }
+    remove(id) {
+        var notes = this.state.notes.filter(note => note.id !== id)
+        this.setState({notes})
+    }
+    eachNote(note) {
+        return (<Note key={note.id}
+                      id={note.id}
+                      onChange={this.update}
+                      onRemove={this.remove}>
+                  {note.note}
+                </Note>)
     }
     render() {
-      return ( <Draggable>
-               {(this.state.editing) ? this.renderForm()
-                                     : this.renderDisplay()}
-               </Draggable>
-        )
-
+        return (<div className='board'>
+                   {this.state.notes.map(this.eachNote)}
+                   <button onClick={this.add.bind(null, 'New Note')}>ADD NOTE</button>
+                </div>)
     }
 }
