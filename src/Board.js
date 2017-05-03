@@ -79,7 +79,7 @@ export default class Board extends Component {
         return (<div className='board'>
                    <h1>ES6 React.js Bulletin Board</h1>
                    {this.state.notes.map(this.eachNote)}
-                   <button onClick={this.add.bind(null, 'New Note')}>ADD NOTE</button>
+                   <button onClick={() => this.add('New Note')}>ADD NOTE</button>
                 </div>)
     }
 }
