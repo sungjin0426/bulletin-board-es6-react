@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Shadows+Into+Light);
+@import url(https://fonts.googleapis.com/css?family=Shadows+Into+Light);
 
 body,
 html,
@@ -17,6 +17,15 @@ div.board {
   background-color: 'brown';
   width: 100%;
   background: #eab92d;
+}
+
+div.board h1 {
+  font-family: "Shadows Into Light", Arial;
+  margin: 15px;
+}
+
+div.board button {
+  font-family: "Shadows Into Light", Arial;
 }
 
 div.note {

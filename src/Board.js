@@ -25,7 +25,7 @@ export default class Board extends Component {
     }
     componentWillMount() {
         if (this.props.count) {
-            var url = `http://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`
+            var url = `https://baconipsum.com/api/?type=all-meat&sentences=${this.props.count}`
             fetch(url)
                   .then(results => results.json())
                   .then(array => array[0])
@@ -77,6 +77,7 @@ export default class Board extends Component {
     }
     render() {
         return (<div className='board'>
+                   <h1>ES6 React.js Bulletin Board</h1>
                    {this.state.notes.map(this.eachNote)}
                    <button onClick={this.add.bind(null, 'New Note')}>ADD NOTE</button>
                 </div>)
